@@ -109,7 +109,7 @@ def get_requirements(extracted_tar_gz_path: str) -> List[str]:
     if len(requirement_files) == 0:
         raise ValueError("Could not find requirements file.")
 
-    sorted(requirement_files, key=len)
+    requirement_files.sort(key=len)
 
     # Take the requirements file with the least complex name (requirements.txt instead of dev-req... etc.)
     filepath = requirement_files[0]
