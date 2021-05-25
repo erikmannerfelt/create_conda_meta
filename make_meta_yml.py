@@ -98,17 +98,23 @@ def parse_license(extracted_tar_gz_path: str) -> Tuple[str, str]:
 
 def get_requirements(extracted_tar_gz_path: str) -> List[str]:
     """Get requirements from a requirements file."""
+    requirement_files: List[str] = []
     for root, _, files in os.walk(extracted_tar_gz_path):
-
         potential_reqs = [
             filename for filename in files if "requirements" in filename.lower()
         ]
 
-        if len(potential_reqs) > 0:
-            filepath = os.path.join(root, potential_reqs[0])
-            break
-    else:
+        for reqfile in potential_reqs:
+            requirement_files.append(os.path.join(root, reqfile))
+    if len(requirement_files) == 0:
         raise ValueError("Could not find requirements file.")
+
+    sorted(requirement_files, key=len)
+
+    # Take the requirements file with the least complex name (requirements.txt instead of dev-req... etc.)
+    filepath = requirement_files[0]
+
+
 
     with open(filepath) as infile:
         requirements = infile.read().splitlines()
